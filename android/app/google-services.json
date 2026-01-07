@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215381818496",
+    "project_id": "soyeon-project-7b2d9",
+    "storage_bucket": "soyeon-project-7b2d9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215381818496:android:90918fafde1fdf2089ba65",
+        "android_client_info": {
+          "package_name": "com.uk.rehabiltiation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXfJqYA7SEzsPVG2t-LRxuNtVFQKKlsRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
