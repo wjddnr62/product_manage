@@ -33,20 +33,19 @@ class _EnterNamePageState extends State<EnterNamePage> {
     final name = _nameController.text;
 
     try {
-      // 1. 새로운 document 참조를 생성하여 고유 ID를 미리 가져옴
       final userDocRef = FirebaseFirestore.instance.collection('users').doc();
 
-      // 2. Firestore에 사용자 정보 저장
       await userDocRef.set({
-        'uid': userDocRef.id, // 고유 ID 저장
+        'uid': userDocRef.id,
         'phoneNumber': widget.phoneNumber,
         'name': name,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // Hive에 휴대폰 번호 저장
+      // Hive에 사용자 정보 저장
       final userBox = Hive.box('user');
       await userBox.put('phoneNumber', widget.phoneNumber);
+      await userBox.put('uid', userDocRef.id); // 새로 생성된 관리자 uid 저장
 
       if (!mounted) return;
 
@@ -54,7 +53,6 @@ class _EnterNamePageState extends State<EnterNamePage> {
         SnackBar(content: Text('$name님, 회원가입이 완료되었습니다.')),
       );
 
-      // 메인 페이지로 이동 (모든 이전 스택 제거)
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const MainPage()),
         (route) => false,

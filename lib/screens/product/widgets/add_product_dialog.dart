@@ -16,8 +16,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
   final _priceController = TextEditingController();
   final _countController = TextEditingController(text: '1');
   final _sizeController = TextEditingController();
-  String? _selectedType; // 대여, 판매
-  String? _selectedGender; // 남성, 여성, 공용
+  String? _selectedType;
+  String? _selectedGender = '공용'; // 기본값 '공용'으로 설정
   bool _isLoading = false;
 
   @override
@@ -35,6 +35,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
       title: const Text('상품 추가'),
       content: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -43,12 +44,17 @@ class _AddProductDialogState extends State<AddProductDialog> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: '상품명'),
+                textInputAction: TextInputAction.next, 
                 validator: (v) => (v?.trim().isEmpty ?? true) ? '상품명을 입력해주세요.' : null,
               ),
               TextFormField(
                 controller: _priceController,
-                decoration: const InputDecoration(labelText: '가격'),
+                decoration: const InputDecoration(
+                  labelText: '가격',
+                  suffixText: '원',
+                ),
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next, 
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (v) => (v?.trim().isEmpty ?? true) ? '가격을 입력해주세요.' : null,
               ),
@@ -63,6 +69,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 controller: _countController,
                 decoration: const InputDecoration(labelText: '상품 갯수'),
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return '갯수를 입력해주세요.';
@@ -74,6 +81,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 controller: _sizeController,
                 decoration: const InputDecoration(labelText: '사이즈'),
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (v) => (v?.trim().isEmpty ?? true) ? '사이즈를 입력해주세요.' : null,
               ),

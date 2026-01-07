@@ -18,7 +18,6 @@ class AuthGate extends StatefulWidget {
 class _AuthGateState extends State<AuthGate> {
 
   Future<void> _loginWithPhoneNumber() async {
-    // 1. 휴대폰 번호 가져오기
     String? phoneNumber;
     try {
       phoneNumber = await GetPhoneNumber().get();
@@ -39,7 +38,6 @@ class _AuthGateState extends State<AuthGate> {
       return;
     }
 
-    // 2. Firestore에서 번호 조회
     try {
       final query = await FirebaseFirestore.instance
           .collection('users')
@@ -50,17 +48,24 @@ class _AuthGateState extends State<AuthGate> {
       if (!mounted) return;
 
       if (query.docs.isNotEmpty) {
-        // 3. 회원정보가 있으면 Hive에 번호 저장
-        final userBox = Hive.box('user');
-        await userBox.put('phoneNumber', phoneNumber);
+        final userDoc = query.docs.first;
+        final userUid = userDoc.data()['uid'] as String?;
 
-        // 4. 메인 화면으로 이동 (스택 제거)
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
-        );
+        if (userUid != null) {
+          final userBox = Hive.box('user');
+          await userBox.put('phoneNumber', phoneNumber);
+          await userBox.put('uid', userUid); // 로그인한 관리자(user)의 uid 저장
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+          );
+        } else {
+           ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('사용자 정보를 찾을 수 없습니다.')),
+          );
+        }
       } else {
-        // 5. 회원정보가 없으면 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('회원정보가 없습니다.')),
         );

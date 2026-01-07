@@ -9,11 +9,16 @@ class Product {
   final String gender; // 남성, 여성, 공용
   final DateTime createdAt;
 
-  // 새로운 필드들
   final String status; // "available", "rented", "sold"
   final String? rentedToUid;
   final String? rentedToName;
-  final DateTime? returnDate;
+  final DateTime? rentedDate; 
+  final DateTime? returnDate; 
+  final DateTime? soldDate;
+  final String? soldToUid;
+  final String? soldToName;
+  final String? registeredBy; 
+  final DateTime? lastTransactionDate; // 상태 변경일 (정렬용)
 
   Product({
     required this.uid,
@@ -26,7 +31,13 @@ class Product {
     this.status = 'available',
     this.rentedToUid,
     this.rentedToName,
+    this.rentedDate,
     this.returnDate,
+    this.soldDate,
+    this.soldToUid,
+    this.soldToName,
+    this.registeredBy,
+    this.lastTransactionDate,
   });
 
   factory Product.fromFirestore(DocumentSnapshot doc) {
@@ -42,7 +53,13 @@ class Product {
       status: data['status'] ?? 'available',
       rentedToUid: data['rentedToUid'] as String?,
       rentedToName: data['rentedToName'] as String?,
+      rentedDate: (data['rentedDate'] as Timestamp?)?.toDate(),
       returnDate: (data['returnDate'] as Timestamp?)?.toDate(),
+      soldDate: (data['soldDate'] as Timestamp?)?.toDate(),
+      soldToUid: data['soldToUid'] as String?,
+      soldToName: data['soldToName'] as String?,
+      registeredBy: data['registeredBy'] as String?,
+      lastTransactionDate: (data['lastTransactionDate'] as Timestamp?)?.toDate(),
     );
   }
 
@@ -58,7 +75,13 @@ class Product {
       'status': status,
       'rentedToUid': rentedToUid,
       'rentedToName': rentedToName,
+      'rentedDate': rentedDate,
       'returnDate': returnDate,
+      'soldDate': soldDate,
+      'soldToUid': soldToUid,
+      'soldToName': soldToName,
+      'registeredBy': registeredBy,
+      'lastTransactionDate': lastTransactionDate,
     };
   }
 }

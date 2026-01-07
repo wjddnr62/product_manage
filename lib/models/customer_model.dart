@@ -6,15 +6,14 @@ class Customer {
   final int? age;
   final String gender;
   final String phoneNumber;
+  final String? registeredBy; // 등록한 관리자 uid
   final int rentalCount;
   final int purchaseCount;
   final DateTime? lastUsedDate;
   final String? lastUsedProduct;
   final DateTime createdAt;
-
-  // 새로 추가된 필드
-  final List<Map<String, dynamic>> rentedProducts; // 대여한 상품 정보
-  final List<Map<String, dynamic>> purchasedProducts; // 구매한 상품 정보
+  final List<Map<String, dynamic>> rentedProducts;
+  final List<Map<String, dynamic>> purchasedProducts;
 
   Customer({
     required this.uid,
@@ -22,6 +21,7 @@ class Customer {
     this.age,
     required this.gender,
     required this.phoneNumber,
+    this.registeredBy,
     required this.rentalCount,
     required this.purchaseCount,
     this.lastUsedDate,
@@ -39,6 +39,7 @@ class Customer {
       age: data['age'] as int?,
       gender: data['gender'] ?? '-',
       phoneNumber: data['phoneNumber'] ?? '번호 없음',
+      registeredBy: data['registeredBy'] as String?,
       rentalCount: data['rentalCount'] ?? 0,
       purchaseCount: data['purchaseCount'] ?? 0,
       lastUsedDate: (data['lastUsedDate'] as Timestamp?)?.toDate(),
@@ -56,6 +57,7 @@ class Customer {
       'age': age,
       'gender': gender,
       'phoneNumber': phoneNumber,
+      'registeredBy': registeredBy,
       'rentalCount': rentalCount,
       'purchaseCount': purchaseCount,
       'lastUsedDate': lastUsedDate,

@@ -32,6 +32,7 @@ class CustomerRepository {
     required String phoneNumber,
     required String gender,
     int? age,
+    required String registeredBy, // 등록한 관리자 uid
   }) async {
     final docRef = _firestore.collection('customers').doc();
     final newCustomer = {
@@ -40,6 +41,7 @@ class CustomerRepository {
       'age': age,
       'gender': gender,
       'phoneNumber': phoneNumber,
+      'registeredBy': registeredBy, // 필드 추가
       'rentalCount': 0, // 대여 횟수 초기화
       'purchaseCount': 0, // 구매 횟수 초기화
       'lastUsedDate': null, // 최근 이용일 초기화

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:rehabiltiation/repositories/customer_repository.dart';
 import 'package:rehabiltiation/screens/customer/cubit/customer_management_state.dart';
 
@@ -30,17 +31,27 @@ class CustomerManagementCubit extends Cubit<CustomerManagementState> {
       final isDuplicate = await _customerRepository.isPhoneNumberDuplicate(phoneNumber);
       if (isDuplicate) {
         emit(CustomerManagementError('이미 등록된 고객 번호입니다.'));
-        // 다시 고객 목록 상태로 돌아가기 위해 잠시 후 loadCustomers 호출
         Future.delayed(const Duration(seconds: 2), () => loadCustomers());
         return;
       }
+
+      // Hive에서 현재 로그인한 관리자 uid 가져오기
+      final userBox = Hive.box('user');
+      final registeredByUid = userBox.get('uid') as String?;
+
+      if (registeredByUid == null) {
+        emit(CustomerManagementError('로그인 정보를 찾을 수 없습니다. 다시 로그인 해주세요.'));
+        Future.delayed(const Duration(seconds: 2), () => loadCustomers());
+        return;
+      }
+
       await _customerRepository.addCustomer(
         name: name,
         phoneNumber: phoneNumber,
         gender: gender,
         age: age,
+        registeredBy: registeredByUid,
       );
-      // 성공 시 스트림이 자동으로 목록을 갱신하므로 별도 상태 변경 필요 없음
     } catch (e) {
       emit(CustomerManagementError(e.toString()));
       Future.delayed(const Duration(seconds: 2), () => loadCustomers());

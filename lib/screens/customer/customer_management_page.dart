@@ -4,6 +4,7 @@ import 'package:rehabiltiation/models/customer_model.dart';
 import 'package:rehabiltiation/repositories/customer_repository.dart';
 import 'package:rehabiltiation/screens/customer/cubit/customer_management_cubit.dart';
 import 'package:rehabiltiation/screens/customer/cubit/customer_management_state.dart';
+import 'package:rehabiltiation/screens/customer/customer_detail_page.dart';
 import 'package:rehabiltiation/screens/customer/widgets/add_customer_dialog.dart';
 
 class CustomerManagementPage extends StatelessWidget {
@@ -23,6 +24,7 @@ class CustomerManagementView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<CustomerManagementCubit>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('고객 관리'),
@@ -32,7 +34,7 @@ class CustomerManagementView extends StatelessWidget {
             onPressed: () => showDialog(
               context: context,
               builder: (_) => BlocProvider.value(
-                value: BlocProvider.of<CustomerManagementCubit>(context),
+                value: cubit,
                 child: const AddCustomerDialog(),
               ),
             ),
@@ -58,7 +60,7 @@ class CustomerManagementView extends StatelessWidget {
                 return const Center(child: Text('고객을 추가해주세요'));
               }
               return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80), // 하단 여백 추가
+                padding: const EdgeInsets.only(bottom: 80),
                 itemCount: state.customers.length,
                 itemBuilder: (context, index) {
                   final Customer customer = state.customers[index];
@@ -67,11 +69,31 @@ class CustomerManagementView extends StatelessWidget {
                     subtitle: Text(customer.age == null 
                         ? customer.phoneNumber 
                         : '${customer.phoneNumber} (만 ${customer.age}세)'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CustomerDetailPage(customer: customer),
+                        ),
+                      );
+                    },
                   );
                 },
               );
             }
-            return const Center(child: Text('알 수 없는 오류가 발생했습니다.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('데이터를 불러오는데 실패했습니다.'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => cubit.loadCustomers(),
+                    child: const Text('다시 시도'),
+                  ),
+                ],
+              ),
+            );
           },
         ),
       ),
