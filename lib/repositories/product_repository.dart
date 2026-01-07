@@ -85,7 +85,7 @@ class ProductRepository {
       final now = Timestamp.now();
 
       if (transactionType == 'rent') {
-        final returnDate = now.toDate().add(const Duration(days: 2));
+        final returnDate = now.toDate().add(const Duration(days: 3)); // 2일에서 3일로 변경
         transaction.update(productRef, {
           'status': 'rented',
           'rentedToUid': customer.uid,

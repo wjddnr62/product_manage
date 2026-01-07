@@ -32,7 +32,7 @@ class _ProcessTransactionDialogState extends State<ProcessTransactionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('${widget.product.name} 처리'),
+      title: Text('상품 처리'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

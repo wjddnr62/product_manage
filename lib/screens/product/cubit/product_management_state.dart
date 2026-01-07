@@ -16,9 +16,30 @@ class ProductManagementLoading extends ProductManagementState {}
 class ProductManagementLoaded extends ProductManagementState {
   final List<Product> allProducts;
   final Map<String, String> userMap;
-  final String? transactionMessage; // 성공 메시지
+  final String? transactionMessage;
 
-  const ProductManagementLoaded(this.allProducts, this.userMap, {this.transactionMessage});
+  // UI 렌더링을 위한 가공된 데이터
+  final List<ProductGroup> groupedAvailableProducts;
+
+  ProductManagementLoaded(this.allProducts, this.userMap, {this.transactionMessage})
+      : groupedAvailableProducts = _groupProducts(allProducts);
+
+  // 데이터를 상태 클래스 내부에서 가공
+  static List<ProductGroup> _groupProducts(List<Product> products) {
+    final available = products.where((p) => p.status == 'available').toList();
+    final Map<String, List<Product>> grouped = {};
+    for (var product in available) {
+      final key = product.name;
+      if (grouped.containsKey(key)) {
+        grouped[key]!.add(product);
+      } else {
+        grouped[key] = [product];
+      }
+    }
+    return grouped.entries
+        .map((entry) => ProductGroup(name: entry.key, products: entry.value))
+        .toList();
+  }
 
   ProductManagementLoaded copyWith({
     List<Product>? allProducts,
@@ -28,7 +49,7 @@ class ProductManagementLoaded extends ProductManagementState {
     return ProductManagementLoaded(
       allProducts ?? this.allProducts,
       userMap ?? this.userMap,
-      transactionMessage: transactionMessage, // 메시지는 복사하지 않고 새로 받음
+      transactionMessage: transactionMessage,
     );
   }
 
@@ -36,15 +57,22 @@ class ProductManagementLoaded extends ProductManagementState {
   List<Object?> get props => [allProducts, userMap, transactionMessage];
 }
 
+// UI에서 사용할 그룹 모델
+class ProductGroup extends Equatable {
+  final String name;
+  final List<Product> products;
+  final int stock;
+
+  ProductGroup({required this.name, required this.products}) 
+      : stock = products.length;
+
+  @override
+  List<Object?> get props => [name, products];
+}
+
 class ProductManagementError extends ProductManagementState {
   final String error;
   const ProductManagementError(this.error);
-   @override
+  @override
   List<Object?> get props => [error];
 }
-
-// 이 상태는 더 이상 사용하지 않음
-// class TransactionSuccess extends ProductManagementState {
-//   final String message;
-//   const TransactionSuccess(this.message);
-// }

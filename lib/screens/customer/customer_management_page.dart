@@ -22,6 +22,23 @@ class CustomerManagementPage extends StatelessWidget {
 class CustomerManagementView extends StatelessWidget {
   const CustomerManagementView({super.key});
 
+  String _formatPhoneNumber(String phoneNumber) {
+    if (phoneNumber.length == 11) {
+      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7)}';
+    }
+    return phoneNumber;
+  }
+
+  Widget _buildCustomerGradeChip(Customer customer) {
+    final totalTransactions = customer.rentalCount + customer.purchaseCount;
+    if (totalTransactions == 0) {
+      return const Chip(label: Text('신규'), backgroundColor: Colors.blueAccent, labelStyle: TextStyle(color: Colors.white));
+    } else if (totalTransactions >= 5) {
+      return const Chip(label: Text('단골'), backgroundColor: Colors.amber, labelStyle: TextStyle(color: Colors.white));
+    }
+    return const SizedBox.shrink(); // 아무것도 표시하지 않음
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<CustomerManagementCubit>();
@@ -66,9 +83,12 @@ class CustomerManagementView extends StatelessWidget {
                   final Customer customer = state.customers[index];
                   return ListTile(
                     title: Text('${customer.name} (${customer.gender})'),
-                    subtitle: Text(customer.age == null 
-                        ? customer.phoneNumber 
-                        : '${customer.phoneNumber} (만 ${customer.age}세)'),
+                    subtitle: Text(
+                      customer.age == null
+                          ? _formatPhoneNumber(customer.phoneNumber)
+                          : '${_formatPhoneNumber(customer.phoneNumber)} (${customer.age}세)', // '만' 제거
+                    ),
+                    trailing: _buildCustomerGradeChip(customer),
                     onTap: () {
                       Navigator.push(
                         context,

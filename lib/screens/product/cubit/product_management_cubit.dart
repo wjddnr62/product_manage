@@ -16,6 +16,7 @@ class ProductManagementCubit extends Cubit<ProductManagementState> {
 
   ProductManagementCubit(this._productRepository, this._customerRepository, this._userRepository) : super(ProductManagementInitial());
 
+  // 상품 목록 불러오기
   void loadProducts() async {
     emit(ProductManagementLoading());
     try {
@@ -24,6 +25,7 @@ class ProductManagementCubit extends Cubit<ProductManagementState> {
 
       _productSubscription?.cancel();
       _productSubscription = _productRepository.getProducts().listen((products) {
+        // 상태가 생성될 때 데이터 가공이 이루어짐
         emit(ProductManagementLoaded(products, userMap));
       }, onError: (error) {
         emit(ProductManagementError(error.toString()));
@@ -33,6 +35,7 @@ class ProductManagementCubit extends Cubit<ProductManagementState> {
     }
   }
 
+  // 상품 추가
   Future<void> addProduct({
     required String name,
     required double price,
@@ -63,6 +66,7 @@ class ProductManagementCubit extends Cubit<ProductManagementState> {
     }
   }
 
+  // 상품 삭제 (UID 기반)
   Future<void> deleteProduct(String uid) async {
      try {
       await _productRepository.deleteProduct(uid);
@@ -71,14 +75,16 @@ class ProductManagementCubit extends Cubit<ProductManagementState> {
     }
   }
 
+  // 모든 고객 목록 가져오기
   Future<List<Customer>> getCustomers() async {
     return await _customerRepository.getAllCustomers();
   }
 
+  // 대여 또는 판매 처리
   Future<void> processTransaction({
     required Product product,
     required Customer customer,
-    required String transactionType,
+    required String transactionType, // "rent" or "sell"
   }) async {
     try {
       await _productRepository.processTransaction(
