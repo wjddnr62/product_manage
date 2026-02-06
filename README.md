@@ -1,7 +1,6 @@
 # rehabiltiation
 
-AI 경험용 프로젝트
-해당 프로젝트는 AI를 통한 코드 작성이 이루어짐
+AI 바이브 코딩을 통해 만든 간단한 고객 관리 및 상품 관리 앱
 
 ## Getting Started
 
