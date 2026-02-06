@@ -1,6 +1,7 @@
 # rehabiltiation
 
-내가 재활하기 위해 만드는 프로젝트
+AI 경험용 프로젝트
+해당 프로젝트는 AI를 통한 코드 작성이 이루어짐
 
 ## Getting Started
 
