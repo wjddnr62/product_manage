@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:rehabiltiation/screens/sign_up/cubit/sign_up_state.dart';
 import 'package:rehabiltiation/screens/sign_up/enter_name_page.dart';
-import 'package:rehabiltiation/screens/sign_up/sign_up_cubit.dart';
-import 'package:rehabiltiation/screens/sign_up/sign_up_state.dart';
+import 'package:rehabiltiation/screens/sign_up/cubit/sign_up_cubit.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});

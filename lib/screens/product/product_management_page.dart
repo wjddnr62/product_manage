@@ -113,7 +113,7 @@ class _ProductManagementViewState extends State<ProductManagementView> {
                     final group = data.groupedAvailableProducts[index];
 
                     return ReusableExpansionTileCard(
-                      cardKey: ValueKey(group.name),
+                      key: ValueKey(group.name),
                       pageStorageKey: group.name,
                       title: group.name,
                       subtitle: Text('재고: ${group.stock}'),
